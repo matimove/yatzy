@@ -1,0 +1,10 @@
+What have I done this week?
+- Coded the yatzy interface and implemented random pick algorithm to get first functioning algorithm (now dice locking and score placements are completely random, so often scores of 0 are placed on the scoreboard)
+How has the program progressed?
+- Very well now since its now working, need to improve the code structure and add scoring functions etc for statistics.
+What did I learn this week / today?
+- Learned about q learning mostly and expectimax
+What remained unclear or caused difficulties?
+- Right now everything has gone smoothly with the first code pieces allthough im lacking still lot of functionality, documentation and comments.
+What will I do next?
+- Start creating documentation, comments, tests and then work on the next algorithms and improve the statistics visualizations and information.

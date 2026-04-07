@@ -1,0 +1,40 @@
+Yatzy – Project Specification
+
+Programming Language
+- Python
+
+Program:
+-Bachelor of Computer science (TKT)
+
+(I can review projects in Python.)
+
+Algorithms and Data Structures
+- Random (pick which dice to keep randomly and where to assign the given score randomly)
+- Greedy (Choose action that maximizes reward in the immediate term)
+- Q-learning (Learn the optimal Q-table for state action pairs (may need some heuristic to shrink state space.))
+- Expectimax (Compute expected values for each action and pick the highest)
+- (Possibly some other algorithms still to be encountered.)
+
+Data structures:
+- Arrays/lists/matrices for dice, scoretable and q-table.
+
+Problem Being Solved:
+-Investigating how different yatzy playing algorithms compete against each other.
+
+Program Inputs:
+-Interface is the yatzy game code, which will give the state and action for the algorithms to choose from.
+
+Program outputs:
+-After game finished, a final score can be calculated. Games can be repeated multiple times to get an average and variance to score each algorithm with.
+
+Time and Space Complexity
+-
+
+Space complexity:
+-
+
+Sources
+
+Core of the Project
+The main focus of the project is implementing the different algorithms to play the yatzy game, and to implement the game interface. If there
+is more time left, output/visualization and UI will be improved.
