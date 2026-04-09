@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 class Dice:
     def __init__(self):
@@ -9,14 +10,15 @@ class Dice:
         for i in range(5):
             if self.lock_list[i] == 0:
                 self.dice[i] = random.randint(1,6)
-        self.dice.sort()
+        self.dice = np.sort(self.dice)
 
     def initialize(self):
-        self.dice = sorted([random.randint(1,6) for _ in range(5)])
-        self.lock_list = [0,0,0,0,0]
+        self.dice = np.random.randint(1, 7, size=5)
+        self.dice = np.sort(self.dice)
+        self.lock_list = np.zeros(5)
 
     def display(self):
-        return list(self.dice)
+        return self.dice
     
     def lock(self, lock_list):
         self.lock_list = lock_list

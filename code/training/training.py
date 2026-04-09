@@ -1,15 +1,15 @@
 from algorithms.q_learning import Qlearn
 from  algorithms.random_pick import RandomPick
+from  algorithms.neural_net import NN
 from game.yatzy import Yatzy
 from game.stats import Stats
 
 
 
 #---------------------#
-agent = Qlearn()
-agent.load_q_table("qtable.txt")
-agent.load_model("model_params.txt")
 #agent = RandomPick()
+agent = NN()
+agent.initialize()
 #---------------------#
 env = Yatzy()
 #---------------------#
@@ -44,17 +44,12 @@ for episode in range(episodes):
 
     agent.decay_epsilon()
     
-    if episode % 10000 == 0:
-        avg_score = sum(scores[-10000:]) / len(scores[-10000:])
-        avg_bonus = sum(bonuses[-10000:]) / len(bonuses[-10000:]) * 100
+    if episode % 100 == 0:
+        avg_score = sum(scores[-100:]) / len(scores[-100:])
+        avg_bonus = sum(bonuses[-100:]) / len(bonuses[-100:]) * 100
         print(f"Episode {episode} | Avg Score: {avg_score:.2f} | Bonus %: {avg_bonus:.2f} | Epsilon: {agent.epsilon:.3f}")
         #print("Unique states visited:", len(agent.Q_table))
         #stats.add_score(avg_score)
-
-    if episode % 10000 == 0:
-        agent.save_q_table("qtable.txt")
-        agent.save_model("model_params.txt")
-
 
 #stats.show_stats()
 

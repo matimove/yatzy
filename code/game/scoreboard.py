@@ -1,54 +1,44 @@
+import numpy as np
+
 class Scoreboard:
+
     def __init__(self):
         self.scoreboard = None
     
     def initialize(self):
-        self.scoreboard = {"Ones": None,
-                           "Twos": None,
-                           "Threes": None,
-                           "Fours": None,
-                           "Fives": None,
-                           "Sixes": None,
-                           "One Pair": None,
-                           "Two Pair": None,
-                           "Three of a Kind": None,
-                           "Four of a Kind": None,
-                           "Small Straight": None,
-                           "Large Straight": None,
-                           "Full House": None,
-                           "Chance": None,
-                           "Yatzy": None,
+        self.scoreboard = {"ones": None,
+                           "twos": None,
+                           "threes": None,
+                           "fours": None,
+                           "fives": None,
+                           "sixes": None,
+                           "one_pair": None,
+                           "two_pair": None,
+                           "three_of_a_kind": None,
+                           "four_of_a_kind": None,
+                           "small_straight": None,
+                           "large_straight": None,
+                           "full_house": None,
+                           "chance": None,
+                           "yatzy": None,
                            }
-        self.categories = [
-                            "Ones",
-                            "Twos",
-                            "Threes",
-                            "Fours",
-                            "Fives",
-                            "Sixes",
-                            "One Pair",
-                            "Two Pair",
-                            "Three of a Kind",
-                            "Four of a Kind",
-                            "Small Straight",
-                            "Large Straight",
-                            "Full House",
-                            "Chance",
-                            "Yatzy"
-                            ]
-        self.bonus_achieved=False
+
+        self.categories = ["ones", "twos", "threes", "fours", "fives", "sixes",
+            "one_pair", "two_pairs", "three_of_a_kind", "four_of_a_kind",
+            "small_straight", "large_straight",
+            "full_house", "chance", "yatzy"]
     
     def return_scoreboard(self):
         return self.scoreboard
     
     def get_upper_sum(self):
 
-        upper_section = [self.scoreboard["Ones"],
-                    self.scoreboard["Twos"],
-                    self.scoreboard["Threes"],
-                    self.scoreboard["Fours"],
-                    self.scoreboard["Fives"],
-                    self.scoreboard["Sixes"]
+        upper_section = [self.scoreboard["ones"],
+                    self.scoreboard["twos"],
+                    self.scoreboard["threes"],
+                    self.scoreboard["fours"],
+                    self.scoreboard["fives"],
+                    self.scoreboard["sixes"]
                     ]
     
         upper_sum = sum(score if score is not None else 0 for score in upper_section)
@@ -71,12 +61,12 @@ class Scoreboard:
     def score_game(self):
     
         top_section_score = sum([
-            self.scoreboard["Ones"],
-            self.scoreboard["Twos"], 
-            self.scoreboard["Threes"], 
-            self.scoreboard["Fours"], 
-            self.scoreboard["Fives"], 
-            self.scoreboard["Sixes"]
+            self.scoreboard["ones"],
+            self.scoreboard["twos"], 
+            self.scoreboard["threes"], 
+            self.scoreboard["fours"], 
+            self.scoreboard["fives"], 
+            self.scoreboard["sixes"]
             ])
         
         if top_section_score >= 63:
@@ -91,13 +81,10 @@ class Scoreboard:
     def get_scoreboard_mask(self):
         return [0 if item is None else 1 for item in self.scoreboard.values()]
     
-    def place_score(self, dice, placement):
-        category_name = self.categories[placement-1]
+    def place_score(self, dice, category_name):
         
         self.scoreboard[category_name] = self.score_dice(dice.display(), category_name)
         return self.score_dice(dice.display(), category_name)
-        
-
            
     def count_dice(self, dice):
         dct = {}
@@ -108,78 +95,86 @@ class Scoreboard:
                 dct[d] = 1
         return dct
     
-
     def score_dice(self, dice, pick):
         
-        if pick == 'Ones':
-            return dice.count(1)*1
+        if pick == 'ones':
+            return np.sum(dice == 1) * 1
         
-        if pick =='Twos':
-            return dice.count(2)*2
+        if pick =='twos':
+            return np.sum(dice == 2)*2
         
-        if pick =='Threes':
-            return dice.count(3)*3
+        if pick =='threes':
+            return np.sum(dice == 3)*3
         
-        if pick =='Fours':
-            return dice.count(4)*4
+        if pick =='fours':
+            return np.sum(dice == 4)*4
         
-        if pick =='Fives':
-            return dice.count(5)*5
+        if pick =='fives':
+            return np.sum(dice == 5)*5
         
-        if pick =='Sixes':
-            return dice.count(6)*6
+        if pick =='sixes':
+            return np.sum(dice == 6)*6
         
-        if pick =='One Pair':
-            dct = self.count_dice(dice)
-            highest_die = 0
-            for d in dct:
-                if dct[d] >= 2:
-                    if d > highest_die:
-                        highest_die = d
-            return 2*highest_die
+        if pick =='one_pair':
+            counts = np.bincount(dice, minlength=7)
+
+            pairs = np.where(counts >= 2)[0]  
+
+            if len(pairs) == 0:
+                return 0
+
+            highest = pairs.max()
+            return 2 * highest
         
-        if pick =='Two Pair':
-            dct = self.count_dice(dice)
-            first_pair = 0
-            second_pair = 0
+        if pick =='two_pair':
+            counts = np.bincount(dice, minlength=7)
+
+            pairs = np.where(counts >= 2)[0]
+
+            if pairs.size < 2:
+                return 0
+
+            top_two = np.sort(pairs)[-2:]
+            return 2 * top_two.sum()
+        
+        if pick =='three_of_a_kind':
+            counts = np.bincount(dice, minlength=7)
+
+            triples = np.where(counts >= 3)[0]
+
+            if triples.size == 0:
+                return 0
+
+            return 3 * triples.max()
+        
+        if pick =='four_of_a_kind':
+            counts = np.bincount(dice, minlength=7)
+
+            quads = np.where(counts >= 4)[0]
             
-            for d in dct:
-                if dct[d] >= 2:
-                    if d > first_pair:
-                        second_pair = first_pair
-                        first_pair = d
-            
-            return 2*first_pair + 2*second_pair if first_pair != 0 and second_pair != 0 else 0
+            if quads.size == 0:
+                return 0
+
+            return 4 * quads.max()
         
-        if pick =='Three of a Kind':
-            dct = self.count_dice(dice)
-            for d in dice:
-                if dct[d] == 3:
-                    return 3*d
-            return 0 
+        if pick =='small_straight':
+            return 15 if np.array_equal(dice, np.array([1,2,3,4,5])) else 0
         
-        if pick =='Four of a Kind':
-            dct = self.count_dice(dice)
-            for d in dice:
-                if dct[d] == 4:
-                    return 4*d
-            return 0 
+        if pick =='large_straight':
+            return 20 if np.array_equal(dice, np.array([2,3,4,5,6])) else 0
         
-        if pick =='Small Straight':
-            return 15 if dice == [1,2,3,4,5] else 0
-        
-        if pick =='Large Straight':
-            return 20 if dice == [2,3,4,5,6] else 0
-        
-        if pick =='Full House':
-            dct = self.count_dice(dice)
-            if dct[dice[0]] in [2,3] and dct[dice[-1]] in [2,3]:
-                if len(dct) == 2:
-                    return dice[0]*dct[dice[0]] + dice[-1]*dct[dice[-1]]
+        if pick =='full_house':
+            counts = np.bincount(dice, minlength=7)
+            values = np.where(counts > 0)[0]
+            freqs = counts[values]
+
+            if len(values) == 2 and sorted(freqs) == [2, 3]:
+                return np.sum(dice)
+
             return 0
                 
-        if pick =='Chance':
-            return sum(dice)
+        if pick =='chance':
+            return np.sum(dice)
         
-        if pick =='Yatzy':
-            return 50 if len(set(dice)) == 1 else 0
+        if pick =='yatzy':
+            return 50 if np.all(dice == dice[0]) else 0
